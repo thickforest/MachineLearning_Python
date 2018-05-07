@@ -1,28 +1,27 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.font_manager import FontProperties
-font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)    # 解决windows环境下画图汉字乱码问题
-
+from mpl_toolkits.mplot3d import Axes3D
 
 def linearRegression(alpha=0.01,num_iters=400):
     print u"加载数据...\n"
     
     data = loadtxtAndcsv_data("data.txt",",",np.float64)  #读取数据
-    X = data[:,0:-1]      # X对应0到倒数第2列                  
-    y = data[:,-1]        # y对应最后一列  
+    X = data[:,0:-1]      # X对应0到倒数第2列 = [[a,b],...]
+    y = data[:,-1]        # y对应最后一列 = [c,...]
     m = len(y)            # 总的数据条数
-    col = data.shape[1]      # data的列数
-    
+    col = data.shape[1]      # data的列数 = 3
+
     X,mu,sigma = featureNormaliza(X)    # 归一化
     plot_X1_X2(X)         # 画图看一下归一化效果
-    
-    X = np.hstack((np.ones((m,1)),X))    # 在X前加一列1
+
+    X = np.hstack((np.ones((m,1)),X))    # 在X前加一列1 = [[1,a,b],...]
     
     print u"\n执行梯度下降算法....\n"
     
-    theta = np.zeros((col,1))
-    y = y.reshape(-1,1)   #将行向量转化为列
+    theta = np.zeros((col,1)) # = [[0],[0],[0]] 表示Ѳ₀ Ѳ₁ Ѳ₂三个参数
+    y = y.reshape(-1,1)   #将行向量转化为列 = [[c],...]
     theta,J_history = gradientDescent(X, y, theta, alpha, num_iters)
     
     plotJ(J_history, num_iters)
@@ -70,10 +69,13 @@ def gradientDescent(X,y,theta,alpha,num_iters):
     
     for i in range(num_iters):  # 遍历迭代次数    
         h = np.dot(X,theta)     # 计算内积，matrix可以直接乘
-        temp[:,i] = theta - ((alpha/m)*(np.dot(np.transpose(X),h-y)))   #梯度的计算
+        temp[:,i] = theta - ((alpha/m)*(np.dot(np.transpose(X),h-y)))   #梯度的计算,np.transpose(X) <=> X.T
         theta = temp[:,i]
         J_history[i] = computerCost(X,y,theta)      #调用计算代价函数
         print '.',      
+        if i%(num_iters/10) == 0:
+            print theta
+            pltLine(X,y,theta)
     return theta,J_history  
 
 # 计算代价函数
@@ -88,16 +90,16 @@ def computerCost(X,y,theta):
 def plotJ(J_history,num_iters):
     x = np.arange(1,num_iters+1)
     plt.plot(x,J_history)
-    plt.xlabel(u"迭代次数",fontproperties=font) # 注意指定字体，要不然出现乱码问题
-    plt.ylabel(u"代价值",fontproperties=font)
-    plt.title(u"代价随迭代次数的变化",fontproperties=font)
+    plt.xlabel(u"迭代次数")
+    plt.ylabel(u"代价值")
+    plt.title(u"代价随迭代次数的变化")
     plt.show()
 
 # 测试linearRegression函数
 def testLinearRegression():
     mu,sigma,theta = linearRegression(0.01,400)
-    #print u"\n计算的theta值为：\n",theta
-    #print u"\n预测结果为：%f"%predict(mu, sigma, theta)
+    print u"\n计算的theta值为：\n",theta
+    print u"\n预测结果为：%f"%predict(mu, sigma, theta)
     
 # 测试学习效果（预测）
 def predict(mu,sigma,theta):
@@ -110,6 +112,16 @@ def predict(mu,sigma,theta):
     result = np.dot(final_predict,theta)    # 预测结果
     return result
     
+def pltLine(X,y,theta):
+    # 画三维拟合图
+    ax = plt.subplot(111, projection='3d')
+    ax.scatter(X[:,1],X[:,2],y) # 原始散列点
+    n = 1000
+    _X = np.linspace(-2,3,n)
+    _Y = np.linspace(-2,3,n)
+    _Z = theta[0,0] + _X*theta[1,0] + _Y*theta[2,0]
+    ax.scatter(_X, _Y, _Z, c='r')
+    plt.show()
     
 if __name__ == "__main__":
     testLinearRegression()
