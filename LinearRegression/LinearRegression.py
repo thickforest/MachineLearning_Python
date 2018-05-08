@@ -7,7 +7,8 @@ from mpl_toolkits.mplot3d import Axes3D
 def linearRegression(alpha=0.01,num_iters=400):
     print u"加载数据...\n"
     
-    data = loadtxtAndcsv_data("data.txt",",",np.float64)  #读取数据
+    #data = loadtxtAndcsv_data("data.txt",",",np.float64)  #读取数据
+    data = loadtxtAndcsv_data("mydata.txt",",",np.float64)  #读取数据
     X = data[:,0:-1]      # X对应0到倒数第2列 = [[a,b],...]
     y = data[:,-1]        # y对应最后一列 = [c,...]
     m = len(y)            # 总的数据条数
@@ -105,7 +106,8 @@ def testLinearRegression():
 def predict(mu,sigma,theta):
     result = 0
     # 注意归一化
-    predict = np.array([1650,3])
+    #predict = np.array([1650,3])
+    predict = np.array([2,1.6])
     norm_predict = (predict-mu)/sigma
     final_predict = np.hstack((np.ones((1)),norm_predict))
     
