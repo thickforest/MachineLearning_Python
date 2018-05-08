@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf-8
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import train_test_split

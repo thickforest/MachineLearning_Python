@@ -1,12 +1,12 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import optimize
-from matplotlib.font_manager import FontProperties
-font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)    # 解决windows环境下画图汉字乱码问题
 
 
 def LogisticRegression():
+    #data = loadtxtAndcsv_data("data1.txt", ",", np.float64) 
     data = loadtxtAndcsv_data("data2.txt", ",", np.float64) 
     X = data[:,0:-1]
     y = data[:,-1]
@@ -53,7 +53,7 @@ def plot_data(X,y):
     plt.figure(figsize=(15,12))
     plt.plot(X[pos,0],X[pos,1],'ro')        # red o
     plt.plot(X[neg,0],X[neg,1],'bo')        # blue o
-    plt.title(u"两个类别散点图",fontproperties=font)
+    plt.title(u"两个类别散点图")
     plt.show()
 
 # 映射为多项式 
@@ -70,7 +70,7 @@ def mapFeature(X1,X2):
     return out
 
 # 代价函数
-def costFunction(initial_theta,X,y,inital_lambda):
+def costFunction(initial_theta,X,y,initial_lambda):
     m = len(y)
     J = 0
     
@@ -79,11 +79,11 @@ def costFunction(initial_theta,X,y,inital_lambda):
     theta1[0] = 0   
     
     temp = np.dot(np.transpose(theta1),theta1)
-    J = (-np.dot(np.transpose(y),np.log(h))-np.dot(np.transpose(1-y),np.log(1-h))+temp*inital_lambda/2)/m   # 正则化的代价方程
+    J = (-np.dot(np.transpose(y),np.log(h))-np.dot(np.transpose(1-y),np.log(1-h))+temp*initial_lambda/2)/m   # 正则化的代价方程
     return J
 
 # 计算梯度
-def gradient(initial_theta,X,y,inital_lambda):
+def gradient(initial_theta,X,y,initial_lambda):
     m = len(y)
     grad = np.zeros((initial_theta.shape[0]))
     
@@ -110,11 +110,13 @@ def plotDecisionBoundary(theta,X,y):
     plt.figure(figsize=(15,12))
     plt.plot(X[pos,0],X[pos,1],'ro')        # red o
     plt.plot(X[neg,0],X[neg,1],'bo')        # blue o
-    plt.title(u"决策边界",fontproperties=font)
+    plt.title(u"决策边界")
     
+    # data1.txt
     #u = np.linspace(30,100,100)
     #v = np.linspace(30,100,100)
     
+    # data2.txt
     u = np.linspace(-1,1.5,50)  #根据具体的数据，这里需要调整
     v = np.linspace(-1,1.5,50)
     
@@ -125,7 +127,7 @@ def plotDecisionBoundary(theta,X,y):
     
     z = np.transpose(z)
     plt.contour(u,v,z,[0,0.01],linewidth=2.0)   # 画等高线，范围在[0,0.01]，即近似为决策边界
-    #plt.legend()
+    plt.legend()
     plt.show()
 
 # 预测
