@@ -91,7 +91,7 @@ def gradient(initial_theta,X,y,initial_lambda):
     theta1 = initial_theta.copy()
     theta1[0] = 0
 
-    grad = np.dot(np.transpose(X),h-y)/m+inital_lambda/m*theta1 #正则化的梯度
+    grad = np.dot(np.transpose(X),h-y)/m+initial_lambda/m*theta1 #正则化的梯度
     return grad
 
 # S型函数    
