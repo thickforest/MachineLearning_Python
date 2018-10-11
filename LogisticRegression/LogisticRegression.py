@@ -27,7 +27,16 @@ def LogisticRegression():
     - fprime指定costFunction的梯度
     - args是其余测参数，以元组的形式传入，最后会将最小化costFunction的theta返回 
     '''
-    result = optimize.fmin_bfgs(costFunction, initial_theta, fprime=gradient, args=(X,y,initial_lambda))    
+    #result = optimize.fmin_bfgs(costFunction, initial_theta, fprime=gradient, args=(X,y,initial_lambda))
+
+    '''最简单的梯度下降'''
+    theta = np.zeros(X.shape[1])
+    for i in range(1000):	# 需要迭代千次，拟牛顿法仅需迭代40次左右
+        theta -= gradient(theta, X, y, initial_lambda)
+        if i%100 == 0:
+            plotDecisionBoundary(theta, data[:,0:-1], data[:,-1])    #画决策边界
+    result = theta
+
     p = predict(X, result)   #预测
     print u'在训练集上的准确度为%f%%'%np.mean(np.float64(p==y)*100)   # 与真实值比较，p==y返回True，转化为float   
     
